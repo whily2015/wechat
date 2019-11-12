@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理</title>
+</head>
+<body>
+    <h2>用户管理</h2>
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title">
+            <li class="layui-this">已关注</li>
+            <li>黑名单</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-card">
+                <div class="layui-card-header">
+
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-row layui-col-space3">
+                        <div class="layui-col-md8">
+                            <div class="layui-card">
+                                <div class="layui-card-header">全部用户</div>
+                                <div class="layui-card-body">
+
+                                    <div class="layui-row">
+                                        <form class="layui-form" action="">
+                                        <div class="layui-form-item">
+                                            <input type="checkbox" title="全选" lay-skin="primary">
+                                            <button type="button" class="layui-btn layui-btn-primary">打标签</button>
+                                            <button type="button" class="layui-btn layui-btn-primary">加入黑名单</button>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="checkbox" title="" lay-skin="primary">
+                                            <img src="/img/head.jpg" width="50px" style="border: solid 1px;">
+
+                                            <button type="button" class="layui-btn layui-btn-primary">修改备注</button>
+                                        </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md3">
+                            <div class="layui-card">
+                                <!--<div class="layui-card-header">卡片面板</div>-->
+                                <div class="layui-card-body">
+                                    结合 layui 的栅格系统<br>
+                                    轻松实现响应式布局
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    layui.use('form', function() {
+        var form = layui.form;
+    });
+</script>
+</body>
+</html>

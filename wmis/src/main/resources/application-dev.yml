@@ -1,0 +1,9 @@
+spring:
+  devtools:
+    restart:
+      additional-paths: src/main/java
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>批量为用户打标签</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+	<h1>批量为用户打标签</h1>
+	<form>
+		<div class="form-group">
+			<label for="access_token">access_token（可选）</label>
+			<input type="text" class="form-control" id="access_token" placeholder="access_token">
+		</div>
+		<div class="form-group">
+			<button id="btn_gettags" type="button" class="btn btn-primary">获取标签</button>
+		</div>
+		<div class="form-group">
+			<label for="">标签</label>
+			<div id="div_tags">
+				<!-- <label><input id="tagid3" type="radio" name="tagid" value="">星标用户</label> -->
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="openid_list">openid列表</label>
+			<textarea id="openid_list" class="form-control" rows="8"></textarea>
+		</div>
+		<div class="form-group">
+			<input id="btn_playtag" class="btn btn-success" type="button" value="打标签">
+		</div>
+		<div class="form-group">
+			<div class="panel panel-default">
+				<div class="panel-heading">log</div>
+				<div id="result" class="panel-body"></div>
+			</div>
+		</div>
+	</form>
+</div>
+<script src="/layui/layui.all.js"></script>
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    ;!function(){
+		var layer = layui.layer;
+
+    $(function(){
+        $('#btn_gettags').click(function(){
+            //layer.open({type: 2, content: "请稍候...", shadeClose: false});
+            $.ajax({
+                url:"/wechat/tags/get",
+                type:"post",
+                data:{access_token:$('#access_token').val()},
+                dataType:'json',
+                success:function(data){
+                    layer.closeAll();
+                    console.log(data);
+                    $('#div_tags').html('');
+                    if (data.errcode) {
+                        $('#div_tags').html(JSON.stringify(data));
+                        return;
+                    }
+                    $.each(data.tags, function(i, v){
+                        $('#div_tags').append('<label class="radio-inline"><input id="tagid'+v.id+'" type="radio" name="tagid" value="'+v.id+'" '+(i==0?'checked':'')+'>'+v.name+'（'+v.count+'）</label>');
+                    });
+                },
+                error:function(XMLHttpRequest, textStatus, errorThrown){
+                    layer.closeAll();
+                    console.log(textStatus);
+                }
+            });
+        });
+        $('#btn_playtag').click(function(){
+            //layer.open({type: 2, content: "请稍候...", shadeClose: false});
+            var tagid = $('#div_tags').find('input[name=tagid]:checked').val();
+            if (!tagid) {
+                layer.open({content: "请先获取标签", btn: "确定"});
+                return;
+            }
+            var openid_list = $('#openid_list').val();
+            if (!openid_list) {
+                layer.open({content: "至少填写一个openid", btn: "确定"});
+                return;
+            }
+            $.ajax({
+                url:"/wechat/batchtagging",
+                type:"post",
+                data:{access_token:$('#access_token').val(), tagid:tagid, openid_list:openid_list},
+                dataType:'json',
+                success:function(data){
+                    layer.closeAll();
+                    console.log(data);
+                    $('#result').text('');
+                    $.each(data, function(i, v){
+                        $('#result').append('<p style="word-break: break-all;"><strong>openids: </strong>'+v.reqJson.openid_list+', <strong>result: </strong>'+JSON.stringify(v.respJson)+'</p>');
+                    });
+                },
+                error:function(XMLHttpRequest, textStatus, errorThrown){
+                    layer.closeAll();
+                    console.log(textStatus);
+                }
+            });
+        });
+    });
+    }();
+
+</script>
+</body>
+</html>
